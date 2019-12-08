@@ -20,7 +20,7 @@ import "./App.css";
 
 function App() {
   //set city
-  const [city, setCity] = useState("");
+  let [city, setCity] = useState("");
 
   const weatherSelector = useSelector(state => state);
 
@@ -28,19 +28,23 @@ function App() {
   const getWeatherInfoAction = city => dispatch(fetchWeather(city));
 
   useEffect(() => {
-    getWeatherInfoAction("baku");
+    city = localStorage.getItem("city");
+    getWeatherInfoAction(city);
   }, []);
 
-  const getWeatherInfo = e => {
-    e.preventDefault();
+  // 1. Enter the city name
+  // 2. Save to localStorage
+  // 3. Check if there is a value in localStorage, show it otherwise show empty.
 
+  function getWeatherInfo() {
     if (city === "") {
-      console.log("no city to search for");
+      alert("no city to search for");
     } else {
       getWeatherInfoAction(city);
+      localStorage.setItem("city", city);
       console.log(weatherSelector.weatherInfo);
     }
-  };
+  }
 
   let details = "";
   if (
@@ -48,9 +52,12 @@ function App() {
     weatherSelector.weatherInfo.hasOwnProperty("location")
   ) {
     details = (
-      <Card >
+      <Card>
         <CardBody>
-            <img className='center' src={weatherSelector.weatherInfo.current.weather_icons}></img>
+          <img
+            className="center"
+            src={weatherSelector.weatherInfo.current.weather_icons}
+          />
           <ListGroup>
             <ListGroupItem>
               {weatherSelector.weatherInfo.location.name}
@@ -74,15 +81,22 @@ function App() {
 
   return (
     <React.Fragment>
-      <Container className="themed-container" className='App'>
-
+      <Container className="themed-container App">
+        <h1> React/Redux Weather App</h1>
         <Form inline onSubmit={getWeatherInfo}>
           <FormGroup>
-            <Input type="text" name="name" placeholder="enter city name"  onChange={e => setCity(e.target.value)}/>
-          <Button type="submit" color='info' value="Check Weather">Search</Button>
-          </FormGroup>{" "}
+            <Input
+              type="text"
+              name="name"
+              placeholder="enter city name"
+              onChange={e => setCity(e.target.value)}
+            />{" "}
+            <Button type="submit" color="info" value="Check Weather">
+              Search
+            </Button>
+          </FormGroup>
         </Form>
-          {details}
+        {details}
       </Container>
     </React.Fragment>
   );

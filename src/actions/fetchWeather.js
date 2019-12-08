@@ -1,6 +1,6 @@
 // API Access Key
 //Limited Request
-const key = "aecde0be21c74ef9def746b7d2dcfd2c";
+const key = "6604021094c889c855c47d77dc8396f4";
 
 
 export function fetchWeather(city) {
